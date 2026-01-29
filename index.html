@@ -3,73 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>В разработке</title>
+<title>Mini App</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        background: #0f0f0f;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-family: Arial, sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-    .title {
-        color: white;
-        font-size: 32px;
-        margin-bottom: 30px;
-    }
+body {
+  background: #6b6b6b;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
 
-    .dots::after {
-        content: '';
-        animation: dots 1.5s infinite;
-    }
+/* ===== Фон полоски ===== */
+.stripe {
+  position: absolute;
+  width: 200%;
+  height: 120%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.05) 0px,
+    rgba(0,0,0,0.05) 10px,
+    transparent 10px,
+    transparent 40px
+  );
+  top: -10%;
+  left: -50%;
+  transform: rotate(-15deg) skewX(-15deg);
+  animation: moveStripes 20s linear infinite;
+  z-index: 0;
+}
 
-    @keyframes dots {
-        0%   { content: ''; }
-        33%  { content: '.'; }
-        66%  { content: '..'; }
-        100% { content: '...'; }
-    }
+@keyframes moveStripes {
+  0% { transform: rotate(-15deg) skewX(-15deg) translateX(0); }
+  100% { transform: rotate(-15deg) skewX(-15deg) translateX(-50px); }
+}
 
-    .tg-btn {
-        background: #229ED9;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 14px 22px;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: transform 0.1s, opacity 0.1s;
-    }
+/* ===== КОНТЕНТ ===== */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  z-index: 1;
+  position: relative;
+}
 
-    .tg-btn:active {
-        transform: scale(0.97);
-        opacity: 0.9;
-    }
+.title {
+  font-size: 32px;
+  color: #000;
+  font-weight: 500;
+}
 
-    .tg-btn img {
-        width: 24px;
-        height: 24px;
-    }
+.dots::after {
+  content: "";
+  animation: dots 1.6s infinite;
+}
+
+@keyframes dots {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+}
+
+/* ===== КНОПКА TG ===== */
+.tg-btn {
+  background: linear-gradient(180deg, #2da8ff, #1a7fe6);
+  padding: 18px 36px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 14px 30px rgba(0,0,0,0.4);
+}
+
+.tg-btn span {
+  color: #000;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.tg-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: white;
+}
+
+/* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
+.nav-wrap {
+  padding: 20px 14px 22px;
+  z-index: 1;
+  position: relative;
+}
+
+.nav {
+  height: 82px;
+  border-radius: 32px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.25),
+      rgba(255,255,255,0.08)
+    );
+  backdrop-filter: blur(25px) saturate(160%);
+  -webkit-backdrop-filter: blur(25px) saturate(160%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.35),
+    inset 0 -1px 1px rgba(0,0,0,0.25),
+    0 20px 40px rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* ===== КНОПКИ ===== */
+.nav button {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  border: none;
+  background: rgba(0,0,0,0.18);
+  backdrop-filter: blur(8px);
+  color: #000;
+  font-size: 22px;
+  opacity: 0.45;
+  transition: all 0.25s ease;
+}
+
+.nav button.active {
+  opacity: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.45),
+      rgba(255,255,255,0.15)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    0 8px 18px rgba(0,0,0,0.35);
+  transform: translateY(-6px);
+}
 </style>
 </head>
 
 <body>
 
-<div class="title">
+<div class="stripe"></div> <!-- АБСТРАКТНЫЕ ПОЛОСКИ -->
+
+<div class="content">
+  <div class="title">
     В разработке<span class="dots"></span>
+  </div>
+
+  <a class="tg-btn" href="https://t.me/chicken_candy_news" target="_blank">
+    <span>Наш Телеграм</span>
+    <svg viewBox="0 0 24 24">
+      <path d="M2 12l19-9-4 18-6-5-4 4 1-6z"/>
+    </svg>
+  </a>
 </div>
 
-<a href="https://t.me/chicken_candy_news" class="tg-btn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="active" onclick="setTab(this)">🏠</button>
+    <button onclick="setTab(this)">⇄</button>
+    <button onclick="setTab(this)">＋</button>
+    <button onclick="setTab(this)">👤</button>
+  </div>
+</div>
+
+<script>
+Telegram.WebApp.ready();
+
+function setTab(btn) {
+  document.querySelectorAll('.nav button')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
     Наш Telegram
 </a>
 
